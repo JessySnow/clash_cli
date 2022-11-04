@@ -14,7 +14,7 @@ public enum RequestContainer {
     DUMP_LOG(null, null, null),
     DUMP_TRAFFIC(null, null, null),
     GET_VERSION(null, null, null),
-    GET_PROXIES(null, null, null),
+    GET_PROXIES("/proxies", RestfulMethod.GET, null),
     GET_SPECIFIC_PROXY(null, null, null),
     GET_SPECIFIC_PROXY_DELAY(null, null, null),
     SELECT_SPECIFIC_PROXY("/proxies/:name"

@@ -64,8 +64,8 @@ public class Boot {
                 }
             }
 
-            // TODO
-            // format output
+            // TODO format output
+            // dump to console is always a blocking operation
             String res = SimpleHttpClient.doRequest(baseURL, specificRequestContainer);
             System.out.println(res);
 
