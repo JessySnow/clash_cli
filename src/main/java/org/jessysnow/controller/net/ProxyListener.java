@@ -1,4 +1,4 @@
-package org.jessysnow.controller.pojo;
+package org.jessysnow.controller.net;
 
 /**
  * TODO

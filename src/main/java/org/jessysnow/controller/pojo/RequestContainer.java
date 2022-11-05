@@ -11,12 +11,16 @@ import java.util.Map;
  */
 public enum RequestContainer {
 
-    DUMP_LOG(null, null, null),
-    DUMP_TRAFFIC(null, null, null),
-    GET_VERSION(null, null, null),
+    DUMP_LOG("/logs", RestfulMethod.GET, null),
+    DUMP_TRAFFIC("/traffic", RestfulMethod.GET, null),
+    GET_VERSION("/version", RestfulMethod.GET, null),
     GET_PROXIES("/proxies", RestfulMethod.GET, null),
-    GET_SPECIFIC_PROXY(null, null, null),
-    GET_SPECIFIC_PROXY_DELAY(null, null, null),
+    GET_SPECIFIC_PROXY_INFO("/proxies/:name"
+            , RestfulMethod.GET
+            , constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY})),
+    GET_SPECIFIC_PROXY_DELAY("/proxies/:name/delay"
+            , RestfulMethod.GET,
+            constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY})),
     SELECT_SPECIFIC_PROXY("/proxies/:name"
             , RestfulMethod.PUT
             , constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY}));
