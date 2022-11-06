@@ -12,6 +12,12 @@ import java.net.URL;
  * A simple single thread http client
  */
 public class SimpleHttpClient {
+    public static Object reuqest(URL baseURL, RequestContainer requestContainer){
+        if(requestContainer.isLongConnection()){
+            return SimpleHttpClient.doRequest(baseURL, requestContainer, System.out);
+        }
+        return SimpleHttpClient.doRequest(baseURL, requestContainer);
+    }
 
     // Restful invoke
     public static String doRequest(URL baseURL, RequestContainer requestContainer){
@@ -55,7 +61,7 @@ public class SimpleHttpClient {
      * Write real-time data to tou
      * @param out destination to dump data
      */
-    public static void doRequest(URL baseURL, RequestContainer requestContainer, OutputStream out){
+    public static Void doRequest(URL baseURL, RequestContainer requestContainer, OutputStream out){
         URL requestURL;
         HttpURLConnection connection;
         BufferedReader reader = null;
@@ -88,5 +94,6 @@ public class SimpleHttpClient {
                 }
             }
         }
+        return null;
     }
 }

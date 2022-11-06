@@ -74,12 +74,10 @@ public class Boot {
                 }
             }
 
-            // TODO format output
-            // dump to console is always a blocking operation
-            String res = SimpleHttpClient.doRequest(baseURL, specificRequestContainer);
-            System.out.println(res);
-//            SimpleHttpClient.doRequest(baseURL, specificRequestContainer, System.out);
-
+            Object res = SimpleHttpClient.reuqest(baseURL, specificRequestContainer);
+            if(res.getClass().isInstance(String.class)){
+                System.out.println(res);
+            }
             Menu.show();
         }
 
