@@ -1,7 +1,7 @@
 package org.jessysnow.controller.utils;
 
-import org.jessysnow.controller.pojo.HttpParamEntry;
-import org.jessysnow.controller.pojo.RequestContainer;
+import org.jessysnow.controller.pojo.enums.HttpParamEntry;
+import org.jessysnow.controller.pojo.enums.RequestContainer;
 
 import java.util.Map;
 

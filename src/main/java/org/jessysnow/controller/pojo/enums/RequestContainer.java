@@ -1,4 +1,4 @@
-package org.jessysnow.controller.pojo;
+package org.jessysnow.controller.pojo.enums;
 
 import org.jessysnow.controller.handler.AbstractHandler;
 import org.jessysnow.controller.handler.impl.SliceHandler;

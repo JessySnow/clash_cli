@@ -1,7 +1,7 @@
 package org.jessysnow.controller;
 
-import org.jessysnow.controller.pojo.HttpParamEntry;
-import org.jessysnow.controller.pojo.RequestContainer;
+import org.jessysnow.controller.pojo.enums.HttpParamEntry;
+import org.jessysnow.controller.pojo.enums.RequestContainer;
 import org.jessysnow.controller.net.SimpleHttpClient;
 import org.jessysnow.controller.view.Menu;
 
@@ -37,7 +37,7 @@ public class Boot {
         try {
             baseURL = new URL("http://" + host + ":" + port);
         }catch(MalformedURLException e){
-            System.out.printf("Bad url format. URL: %s", "http://"+host+":"+port);
+            System.out.printf("Bad url format. URL: %s", "http://"+host+":"+port +": ");
             System.exit(1);
         }
         Scanner keyIn = new Scanner(System.in);
@@ -74,11 +74,12 @@ public class Boot {
                 }
             }
 
-            Object res = SimpleHttpClient.reuqest(baseURL, specificRequestContainer);
+            Object res = SimpleHttpClient.request(baseURL, specificRequestContainer);
             if(res != null && res.getClass().equals(String.class)){
                 System.out.println(res);
             }
             Menu.show();
+            System.out.println("HHHHHHH");
         }
 
         // clean up
