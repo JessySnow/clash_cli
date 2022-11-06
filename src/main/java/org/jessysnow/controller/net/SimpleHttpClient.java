@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Scanner;
 
 /**
  * A simple single thread http client
@@ -60,7 +61,8 @@ public class SimpleHttpClient {
     }
 
     /**
-     * Write real-time data to console
+     * Support for http stream, force flush, any input from System.in will case interrupt this stream
+     * Write real-time data to console, enter c to quit
      * @param out destination to dump data
      */
     public static Void doRequest(URL baseURL, RequestContainer requestContainer, OutputStream out){
@@ -73,27 +75,35 @@ public class SimpleHttpClient {
             requestURL = new URL(baseURL, URLHelper.parseURL(requestContainer));
             connection = (HttpURLConnection) requestURL.openConnection();
             connection.setRequestMethod(requestContainer.getMethod());
-            // fixme here
-            // open socket io and do block request
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;
+
+            // call-back thread, listen on System.in
+            new Thread(new InterruptListener(connection)).start();
+
             while ((line = reader.readLine()) != null){
-                writer.write(line);
+                // force cut
+                writer.write(line + "\n");
+                // force flush
+                writer.flush();
             }
         } catch (MalformedURLException e) {
             System.out.println("Unknown error happened while construct request url");
             System.exit(1);
         } catch (IOException e) {
-            System.out.println("Unknown error happened while dump data from connection");
-            System.exit(1);
+            System.out.println("Connection closed!");
         } finally {
             if(reader != null){
                 try {
                     reader.close();
                 } catch (IOException e) {
                     System.out.println("Unknown error happened.");
-                    System.exit(1);
                 }
+            }
+            try {
+                writer.close();
+            } catch (IOException e) {
+                System.out.println("Unknown error happened.");
             }
         }
         return null;
@@ -112,5 +122,32 @@ public class SimpleHttpClient {
             }
         }
         return content;
+    }
+
+
+    // Fixme, cause some issue on System.in io
+    private static class InterruptListener implements Runnable{
+        private final HttpURLConnection connection;
+
+        private InterruptListener(HttpURLConnection connection) {
+            this.connection = connection;
+        }
+
+        @Override
+        public void run() {
+            try(BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))){
+                String line;
+                while ((line = reader.readLine()) != null){
+                    if (line.contains("C")){
+                        connection.disconnect();
+                        break;
+                    }
+                }
+                connection.disconnect();
+            }catch (IOException e) {
+                System.out.println("Unknown error");
+                System.exit(1);
+            }
+        }
     }
 }

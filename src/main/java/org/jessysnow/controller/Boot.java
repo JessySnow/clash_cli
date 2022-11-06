@@ -75,7 +75,7 @@ public class Boot {
             }
 
             Object res = SimpleHttpClient.reuqest(baseURL, specificRequestContainer);
-            if(res.getClass().equals(String.class)){
+            if(res != null && res.getClass().equals(String.class)){
                 System.out.println(res);
             }
             Menu.show();
