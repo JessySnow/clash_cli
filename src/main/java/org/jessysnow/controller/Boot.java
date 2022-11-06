@@ -79,7 +79,6 @@ public class Boot {
                 System.out.println(res);
             }
             Menu.show();
-            System.out.println("HHHHHHH");
         }
 
         // clean up

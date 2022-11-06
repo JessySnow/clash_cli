@@ -101,11 +101,12 @@ public class SimpleHttpClient {
                     System.out.println("Unknown error happened.");
                 }
             }
-            try {
-                writer.close();
-            } catch (IOException e) {
-                System.out.println("Unknown error happened.");
-            }
+            // Don't close it, cause System.out would be used again
+//            try {
+//                writer.close();
+//            } catch (IOException e) {
+//                System.out.println("Unknown error happened.");
+//            }
         }
         return null;
     }
@@ -136,7 +137,9 @@ public class SimpleHttpClient {
 
         @Override
         public void run() {
-            try(BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))){
+            // Don't close it cause System.in could be used again
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            try{
                 String line;
                 while ((line = reader.readLine()) != null){
                     if (line.contains("C")){
