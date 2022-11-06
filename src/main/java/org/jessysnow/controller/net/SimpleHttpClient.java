@@ -1,9 +1,11 @@
 package org.jessysnow.controller.net;
 
+import org.jessysnow.controller.handler.AbstractHandler;
 import org.jessysnow.controller.pojo.RequestContainer;
 import org.jessysnow.controller.utils.URLHelper;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -54,11 +56,11 @@ public class SimpleHttpClient {
             }
         }
 
-        return res.toString();
+        return doHandle(res.toString(), requestContainer.getHandlers());
     }
 
     /**
-     * Write real-time data to tou
+     * Write real-time data to console
      * @param out destination to dump data
      */
     public static Void doRequest(URL baseURL, RequestContainer requestContainer, OutputStream out){
@@ -95,5 +97,20 @@ public class SimpleHttpClient {
             }
         }
         return null;
+    }
+
+    private static String doHandle(String content, Class<? extends AbstractHandler>[] handlersClasses){
+        for(Class<? extends AbstractHandler> clazz : handlersClasses){
+            try {
+                AbstractHandler handler = clazz.getConstructor().newInstance();
+                handler.setContent(content);
+                content = handler.handle();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
+                System.out.println("Failed to process content.");
+                return content;
+            }
+        }
+        return content;
     }
 }
