@@ -127,7 +127,6 @@ public class SimpleHttpClient {
     }
 
 
-    // Fixme, cause System.in is closed
     private static class InterruptListener implements Runnable{
         private final HttpURLConnection connection;
 
