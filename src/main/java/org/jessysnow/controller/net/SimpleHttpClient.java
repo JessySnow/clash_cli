@@ -1,6 +1,7 @@
 package org.jessysnow.controller.net;
 
 import org.jessysnow.controller.handler.AbstractHandler;
+import org.jessysnow.controller.net.nio.NIOHttpClient;
 import org.jessysnow.controller.pojo.enums.RequestContainer;
 import org.jessysnow.controller.utils.URLHelper;
 
@@ -17,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 public class SimpleHttpClient {
     public static Object request(URL baseURL, RequestContainer requestContainer){
         if(requestContainer.isLongConnection()){
-            return SimpleHttpClient.doRequest(baseURL, requestContainer, System.out);
+            return NIOHttpClient.doRequest(requestContainer, System.out);
         }
         return SimpleHttpClient.doRequest(baseURL, requestContainer);
     }
