@@ -25,7 +25,7 @@ public class NIOHttpClient {
 
     private static final String logsHeader;
     private static final String trafficHeader;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    public static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     static{
         StringBuffer logsBuilder = new StringBuffer();

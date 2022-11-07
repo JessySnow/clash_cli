@@ -1,5 +1,6 @@
 package org.jessysnow.controller;
 
+import org.jessysnow.controller.net.nio.NIOHttpClient;
 import org.jessysnow.controller.pojo.enums.HttpParamEntry;
 import org.jessysnow.controller.pojo.enums.RequestContainer;
 import org.jessysnow.controller.net.SimpleHttpClient;
@@ -83,5 +84,6 @@ public class Boot {
 
         // clean up
         keyIn.close();
+        NIOHttpClient.executor.close();
     }
 }
