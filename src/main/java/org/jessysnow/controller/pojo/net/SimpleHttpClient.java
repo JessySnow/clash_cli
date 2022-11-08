@@ -75,32 +75,4 @@ public class SimpleHttpClient {
         }
         return content;
     }
-
-
-    private static class InterruptListener implements Runnable{
-        private final HttpURLConnection connection;
-
-        private InterruptListener(HttpURLConnection connection) {
-            this.connection = connection;
-        }
-
-        @Override
-        public void run() {
-            // Don't close it cause System.in could be used again
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            try{
-                String line;
-                while ((line = reader.readLine()) != null){
-                    if (line.contains("C")){
-                        // call back, disconnect
-                        connection.disconnect();
-                        break;
-                    }
-                }
-            }catch (IOException e) {
-                System.out.println("Unknown error");
-                System.exit(1);
-            }
-        }
-    }
 }
