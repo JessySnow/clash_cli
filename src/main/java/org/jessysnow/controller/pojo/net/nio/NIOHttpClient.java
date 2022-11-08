@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 import java.util.concurrent.*;
 
 /**
@@ -67,10 +68,40 @@ public class NIOHttpClient {
             while (!realTimeChannel.finishConnect());
             // invoke
             realTimeChannel.write(header);
-            // Unblocking read, loop until EOF
+            // unblocking read, loop until EOF
             ByteBuffer readBuffer = ByteBuffer.allocate(512);
+            boolean headTag = true;
             while(!stopDump.isDone() && realTimeChannel.read(readBuffer) != -1){
+
                 readBuffer.flip();
+                // skip header
+                byte preVal1 = 0;
+                byte preVal2 = 0;
+                while (readBuffer.hasRemaining()){
+                    byte nowVal1 = readBuffer.get();
+                    if(readBuffer.hasRemaining()){
+                        byte nowVal2 = readBuffer.get();
+                        if((nowVal2 == 10 && nowVal1 == 13) && ((preVal2 == 10 && preVal1 == 13) || !headTag)){
+                            if(headTag){
+                                while (readBuffer.hasRemaining()){
+                                    nowVal1 = readBuffer.get();
+                                    if(readBuffer.hasRemaining()){
+                                        nowVal2 = readBuffer.get();
+                                        if(nowVal2 == 10 && nowVal1 == 13){
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            headTag = false;
+                            break;
+                        }
+                        preVal2 = nowVal2;
+                        preVal1 = nowVal1;
+                    }
+                }
+
+                // output body
                 while (readBuffer.hasRemaining()){
                     out.write((char)readBuffer.get());
                 }
@@ -85,7 +116,7 @@ public class NIOHttpClient {
         }
     }
 
-    // Listen on System.in
+    // listen on System.in
     private static class consoleListener implements Callable<Boolean> {
         @Override
         public Boolean call() throws Exception {

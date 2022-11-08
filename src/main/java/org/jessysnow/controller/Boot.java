@@ -33,7 +33,7 @@ public class Boot {
             setHost(args[0]);
         }
 
-        // base url, it's a absolute URL
+        // base url, it's an absolute URL
         URL baseURL = new URL("http://" + host + ":" + port);
         Scanner keyIn = new Scanner(System.in);
 
@@ -68,7 +68,7 @@ public class Boot {
                 }
             }
 
-            // invoke RESTFul API, may blocking here
+            // invoke RESTFul API, will be blocking here
             Object res = SimpleHttpClient.request(baseURL, specificRequestContainer);
             if(res != null && res.getClass().equals(String.class)){
                 System.out.println(res);
