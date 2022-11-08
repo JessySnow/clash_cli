@@ -1,6 +1,7 @@
 package org.jessysnow.controller.pojo.net;
 
 import org.jessysnow.controller.handler.AbstractHandler;
+import org.jessysnow.controller.pojo.net.io.InLineCliStream;
 import org.jessysnow.controller.pojo.net.nio.NIOHttpClient;
 import org.jessysnow.controller.pojo.enums.RequestContainer;
 import org.jessysnow.controller.utils.URLHelper;
@@ -34,7 +35,6 @@ public class SimpleHttpClient {
             requestURL = new URL(baseURL, URLHelper.parseURL(requestContainer));
             connection = (HttpURLConnection) requestURL.openConnection();
             connection.setRequestMethod(requestContainer.getMethod());
-            // fixme here
             // open socket io and do block request
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             String line;
