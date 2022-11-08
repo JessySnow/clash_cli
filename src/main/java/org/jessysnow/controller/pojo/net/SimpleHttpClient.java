@@ -61,57 +61,6 @@ public class SimpleHttpClient {
         return doHandle(res.toString(), requestContainer.getHandlers());
     }
 
-    /**
-     * Support for http stream, force flush, any input from System.in will case interrupt this stream
-     * Write real-time data to console, enter c to quit
-     * @param out destination to dump data
-     */
-    public static Void doRequest(URL baseURL, RequestContainer requestContainer, OutputStream out){
-        URL requestURL;
-        HttpURLConnection connection;
-        BufferedReader reader = null;
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
-        try {
-            // replace placeholder, construct url, get connection, and config connection method
-            requestURL = new URL(baseURL, URLHelper.parseURL(requestContainer));
-            connection = (HttpURLConnection) requestURL.openConnection();
-            connection.setRequestMethod(requestContainer.getMethod());
-            reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
-            String line;
-
-            // call-back thread, listen on System.in
-            new Thread(new InterruptListener(connection)).start();
-
-            // fixme, readLine is blocking here
-            while ((line = reader.readLine()) != null){
-                // force cut
-                writer.write(line + "\n");
-                // force flush
-                writer.flush();
-            }
-        } catch (MalformedURLException e) {
-            System.out.println("Unknown error happened while construct request url");
-            System.exit(1);
-        } catch (IOException e) {
-            System.out.println("Connection closed!");
-        } finally {
-            if(reader != null){
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    System.out.println("Unknown error happened.");
-                }
-            }
-            // Don't close it, cause System.out would be used again
-//            try {
-//                writer.close();
-//            } catch (IOException e) {
-//                System.out.println("Unknown error happened.");
-//            }
-        }
-        return null;
-    }
-
     private static String doHandle(String content, Class<? extends AbstractHandler>[] handlersClasses){
         for(Class<? extends AbstractHandler> clazz : handlersClasses){
             try {
