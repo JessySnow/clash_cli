@@ -1,7 +1,7 @@
-package org.jessysnow.controller.net;
+package org.jessysnow.controller.pojo.net;
 
 import org.jessysnow.controller.handler.AbstractHandler;
-import org.jessysnow.controller.net.nio.NIOHttpClient;
+import org.jessysnow.controller.pojo.net.nio.NIOHttpClient;
 import org.jessysnow.controller.pojo.enums.RequestContainer;
 import org.jessysnow.controller.utils.URLHelper;
 

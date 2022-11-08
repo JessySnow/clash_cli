@@ -1,6 +1,5 @@
-package org.jessysnow.controller.net.nio;
+package org.jessysnow.controller.pojo.net.nio;
 
-import com.google.gson.JsonIOException;
 import org.jessysnow.controller.Boot;
 import org.jessysnow.controller.pojo.enums.RequestContainer;
 
@@ -9,12 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.URL;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.util.Set;
 import java.util.concurrent.*;
 
 /**

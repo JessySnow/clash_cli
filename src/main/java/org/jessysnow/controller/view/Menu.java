@@ -15,7 +15,7 @@ public class Menu {
         for(Option option : options){
             temp.append(option.toString());
         }
-        temp.append("Enter Q to quit!\n");
+        temp.append("Enter Q to quit!");
         menu = temp.toString();
     }
 
@@ -23,7 +23,4 @@ public class Menu {
         System.out.println(menu);
     }
 
-    public static void main(String[] args) {
-        Menu.show();
-    }
 }

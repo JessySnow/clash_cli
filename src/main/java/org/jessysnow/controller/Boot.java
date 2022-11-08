@@ -1,9 +1,9 @@
 package org.jessysnow.controller;
 
-import org.jessysnow.controller.net.nio.NIOHttpClient;
+import org.jessysnow.controller.pojo.net.nio.NIOHttpClient;
 import org.jessysnow.controller.pojo.enums.HttpParamEntry;
 import org.jessysnow.controller.pojo.enums.RequestContainer;
-import org.jessysnow.controller.net.SimpleHttpClient;
+import org.jessysnow.controller.pojo.net.SimpleHttpClient;
 import org.jessysnow.controller.view.Menu;
 
 import java.net.MalformedURLException;
@@ -24,7 +24,7 @@ public class Boot {
 
     public static final RequestContainer[] containers = RequestContainer.class.getEnumConstants();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedURLException {
         if(args.length == 1){
             setPort(args[0]);
         }
@@ -33,19 +33,13 @@ public class Boot {
             setHost(args[0]);
         }
 
-        // Base url, it's a absolute URL
-        URL baseURL = null;
-        try {
-            baseURL = new URL("http://" + host + ":" + port);
-        }catch(MalformedURLException e){
-            System.out.printf("Bad url format. URL: %s", "http://"+host+":"+port +": ");
-            System.exit(1);
-        }
+        // base url, it's a absolute URL
+        URL baseURL = new URL("http://" + host + ":" + port);
         Scanner keyIn = new Scanner(System.in);
-        String input;
 
         // event loop
         Menu.show();
+        String input;
         while (!(input = keyIn.nextLine()).trim().equalsIgnoreCase("Q")){
             int opChoose;
             if(input.trim().equalsIgnoreCase("Q")){
@@ -64,7 +58,6 @@ public class Boot {
             // construct request properties eg. request method, request path, request param
             RequestContainer specificRequestContainer = containers[opChoose];
             if(specificRequestContainer.getRequestParam() != null){
-
                 // loop-fill request param
                 for (Map.Entry<HttpParamEntry, String> paramEntry : specificRequestContainer
                         .getRequestParam()
@@ -75,6 +68,7 @@ public class Boot {
                 }
             }
 
+            // invoke RESTFul API, may blocking here
             Object res = SimpleHttpClient.request(baseURL, specificRequestContainer);
             if(res != null && res.getClass().equals(String.class)){
                 System.out.println(res);
