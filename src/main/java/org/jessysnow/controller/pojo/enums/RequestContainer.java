@@ -2,7 +2,9 @@ package org.jessysnow.controller.pojo.enums;
 
 import org.jessysnow.controller.handler.AbstractHandler;
 import org.jessysnow.controller.handler.impl.SliceHandler;
+import org.jessysnow.controller.pojo.net.io.InLineCliStream;
 
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,54 +17,45 @@ import java.util.Map;
 public enum RequestContainer {
 
     DUMP_LOG("/logs",
-            RestfulMethod.GET,
-            null,
-            true,
-            null),
+            RestfulMethod.GET,  null,  true,  null, System.out),
     DUMP_TRAFFIC("/traffic",
-            RestfulMethod.GET,
-            null,
-            true,
-            null),
+            RestfulMethod.GET,  null,  true,  null, new InLineCliStream(System.out)),
     GET_VERSION("/version",
-            RestfulMethod.GET,
-            null,
-            false,
-            null),
+            RestfulMethod.GET,  null,  false,  null,  null),
     GET_PROXIES("/proxies",
             RestfulMethod.GET,
             null,
-            false,
-            new Class[]{SliceHandler.class}),
+            false, new Class[]{SliceHandler.class}, null),
     GET_SPECIFIC_PROXY_INFO("/proxies/:name",
             RestfulMethod.GET,
             constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY}),
-            false, null),
+            false, null, null),
     GET_SPECIFIC_PROXY_DELAY("/proxies/:name/delay",
             RestfulMethod.GET,
             constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY}),
-            false,
-            null),
+            false, null, null),
     SELECT_SPECIFIC_PROXY("/proxies/:name",
             RestfulMethod.PUT,
             constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY}),
-            false,
-            null);
+            false,  null, null);
 
     private final String requestURLPath;
     private final RestfulMethod method;
     private final Map<HttpParamEntry, String> requestParam;
     private final boolean longConnection;
     private final Class<? extends AbstractHandler>[] handlers;
+    private final OutputStream outputStream;
 
     RequestContainer(String requestURLPath,
                      RestfulMethod method, Map<HttpParamEntry, String> requestParam,
-                     boolean longConnection, Class<? extends AbstractHandler>[] handlers){
+                     boolean longConnection, Class<? extends AbstractHandler>[] handlers,
+                     OutputStream outputStream){
         this.requestURLPath = requestURLPath;
         this.method = method;
         this.requestParam = requestParam;
         this.longConnection = longConnection;
         this.handlers = handlers;
+        this.outputStream = outputStream;
     }
 
     public String getRequestURLPath() {
@@ -77,6 +70,9 @@ public enum RequestContainer {
         return requestParam;
     }
 
+    public OutputStream getOutputStream() {
+        return outputStream;
+    }
 
     // If it is a long TCP connection, try to continuously output what the socket reads to the console
     public boolean isLongConnection() {
@@ -89,7 +85,6 @@ public enum RequestContainer {
 
     // Supported http method
     public enum RestfulMethod{
-
         GET("GET"),PUT("PUT"),POST("POST"),DEL("DELETE");
 
         private final String restfulMethod;

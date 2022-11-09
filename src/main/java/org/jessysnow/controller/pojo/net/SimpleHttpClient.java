@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 public class SimpleHttpClient {
     public static Object request(URL baseURL, RequestContainer requestContainer){
         if(requestContainer.isLongConnection()){
-            return NIOHttpClient.doRequest(requestContainer, System.out);
+            return NIOHttpClient.doRequest(requestContainer, requestContainer.getOutputStream());
         }
         return SimpleHttpClient.doRequest(baseURL, requestContainer);
     }

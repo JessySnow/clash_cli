@@ -25,6 +25,7 @@ public class Boot {
     public static final RequestContainer[] containers = RequestContainer.class.getEnumConstants();
 
     public static void main(String[] args) throws MalformedURLException {
+        //parse custom host and port
         if(args.length == 1){
             setPort(args[0]);
         }
@@ -35,23 +36,20 @@ public class Boot {
 
         // base url, it's an absolute URL
         URL baseURL = new URL("http://" + host + ":" + port);
-        Scanner keyIn = new Scanner(System.in);
 
         // event loop
         Menu.show();
         String input;
+        Scanner keyIn = new Scanner(System.in);
         while (!(input = keyIn.nextLine()).trim().equalsIgnoreCase("Q")){
             int opChoose;
-            if(input.trim().equalsIgnoreCase("Q")){
-                break;
-            }
             try {
                 opChoose = Integer.parseInt(input);
+                if(!checkOptionValid(opChoose)){
+                    continue;
+                }
             }catch (NumberFormatException e){
-                System.out.println("Unsupported option!");
-                continue;
-            }
-            if(!checkOptionValid(opChoose)){
+                System.out.printf("Unsupported option! It's not a valid number: %s", input);
                 continue;
             }
 
@@ -61,18 +59,20 @@ public class Boot {
                 // loop-fill request param
                 for (Map.Entry<HttpParamEntry, String> paramEntry : specificRequestContainer
                         .getRequestParam()
-                        .entrySet()) {
+                        .entrySet())
+                {
                     System.out.printf("Enter %s: ", paramEntry.getKey().getParamShownName());
                     String keyValue = keyIn.nextLine();
                     paramEntry.setValue(keyValue);
                 }
             }
 
-            // invoke RESTFul API, will be blocking here
+            // invoke RESTFul API(blocking)
             Object res = SimpleHttpClient.request(baseURL, specificRequestContainer);
             if(res != null && res.getClass().equals(String.class)){
                 System.out.println(res);
             }
+
             Menu.show();
         }
 
