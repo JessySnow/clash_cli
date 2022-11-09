@@ -17,27 +17,29 @@ import java.util.Map;
 public enum RequestContainer {
 
     DUMP_LOG("/logs",
-            RestfulMethod.GET,  null,  true,  null, System.out),
+            RestfulMethod.GET,  null,  true,
+            null, System.out, FixedHttpHeader.GET_LOG),
     DUMP_TRAFFIC("/traffic",
-            RestfulMethod.GET,  null,  true,  null, new InLineCliStream(System.out)),
+            RestfulMethod.GET,  null,  true,
+            null, new InLineCliStream(System.out), FixedHttpHeader.GET_TRAFFIC),
     GET_VERSION("/version",
-            RestfulMethod.GET,  null,  false,  null,  null),
+            RestfulMethod.GET,  null,  false,  null,  null, null),
     GET_PROXIES("/proxies",
             RestfulMethod.GET,
             null,
-            false, new Class[]{SliceHandler.class}, null),
+            false, new Class[]{SliceHandler.class}, null, null),
     GET_SPECIFIC_PROXY_INFO("/proxies/:name",
             RestfulMethod.GET,
             constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY}),
-            false, null, null),
+            false, null, null, null),
     GET_SPECIFIC_PROXY_DELAY("/proxies/:name/delay",
             RestfulMethod.GET,
             constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY}),
-            false, null, null),
+            false, null, null, null),
     SELECT_SPECIFIC_PROXY("/proxies/:name",
             RestfulMethod.PUT,
             constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY}),
-            false,  null, null);
+            false,  null, null, null);
 
     private final String requestURLPath;
     private final RestfulMethod method;
@@ -45,17 +47,20 @@ public enum RequestContainer {
     private final boolean longConnection;
     private final Class<? extends AbstractHandler>[] handlers;
     private final OutputStream outputStream;
+    private final FixedHttpHeader fixedHttpHeader;
 
     RequestContainer(String requestURLPath,
                      RestfulMethod method, Map<HttpParamEntry, String> requestParam,
                      boolean longConnection, Class<? extends AbstractHandler>[] handlers,
-                     OutputStream outputStream){
+                     OutputStream outputStream,
+                     FixedHttpHeader fixedHttpHeader){
         this.requestURLPath = requestURLPath;
         this.method = method;
         this.requestParam = requestParam;
         this.longConnection = longConnection;
         this.handlers = handlers;
         this.outputStream = outputStream;
+        this.fixedHttpHeader = fixedHttpHeader;
     }
 
     public String getRequestURLPath() {
