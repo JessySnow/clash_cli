@@ -63,6 +63,10 @@ public enum RequestContainer {
         this.fixedHttpHeader = fixedHttpHeader;
     }
 
+    public String getFixedHttpHeader() {
+        return fixedHttpHeader.HTTP_HEADER;
+    }
+
     public String getRequestURLPath() {
         return this.requestURLPath;
     }
