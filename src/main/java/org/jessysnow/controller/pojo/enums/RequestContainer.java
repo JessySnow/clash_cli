@@ -22,7 +22,7 @@ public enum RequestContainer {
             null, System.out, FixedHttpHeader.GET_LOG),
     DUMP_TRAFFIC("/traffic",
             RestfulMethod.GET,  null,  true,
-            new Class[]{HttpHeaderHandler.class}, new InLineCliStream(System.out), FixedHttpHeader.GET_TRAFFIC),
+            new Class[]{HttpHeaderHandler.class}, System.out, FixedHttpHeader.GET_TRAFFIC),
     GET_VERSION("/version",
             RestfulMethod.GET,  null,  false,  null,  null, null),
     GET_PROXIES("/proxies",

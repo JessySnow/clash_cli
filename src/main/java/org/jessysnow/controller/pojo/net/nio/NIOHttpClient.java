@@ -1,6 +1,7 @@
 package org.jessysnow.controller.pojo.net.nio;
 
 import org.jessysnow.controller.Boot;
+import org.jessysnow.controller.handler.AbstractHandler;
 import org.jessysnow.controller.handler.Handler;
 import org.jessysnow.controller.pojo.enums.RequestContainer;
 
@@ -32,8 +33,7 @@ public class NIOHttpClient {
             // invoke
             realTimeChannel.write(ByteBuffer.wrap(requestContainer.getFixedHttpHeader().getBytes()));
             // non-blocking read, loop until EOF
-            ByteBuffer readBuffer = ByteBuffer.allocate(256);
-            boolean headTag = true;
+            ByteBuffer readBuffer = ByteBuffer.allocate(1024);
             while(!stopDump.isDone() && realTimeChannel.read(readBuffer) != -1){
 //                readBuffer.flip();
 //                // skip header
@@ -69,7 +69,7 @@ public class NIOHttpClient {
 //                }
 //                readBuffer.clear();
                 readBuffer.flip();
-                doHandle(requestContainer,readBuffer);
+                doHandle(readBuffer, requestContainer.getHandlers());
                 while (readBuffer.hasRemaining()){
                     out.write((char)readBuffer.get());
                 }
@@ -87,12 +87,15 @@ public class NIOHttpClient {
         return null;
     }
 
-    private static void doHandle(RequestContainer container, ByteBuffer content){
+    private static void doHandle(ByteBuffer content, Class<? extends AbstractHandler>[] handlersClasses){
+        if(null == handlersClasses || 0 == handlersClasses.length){
+            return;
+        }
         if(null == cachedHandler){
-            cachedHandler = new Handler[container.getHandlers().length];
+            cachedHandler = new Handler[handlersClasses.length];
             for (int i = 0; i < cachedHandler.length; i++) {
                 try {
-                    cachedHandler[i] = container.getHandlers()[i].getConstructor().newInstance();
+                    cachedHandler[i] = handlersClasses[i].getConstructor().newInstance();
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                          NoSuchMethodException ignored) {}
             }

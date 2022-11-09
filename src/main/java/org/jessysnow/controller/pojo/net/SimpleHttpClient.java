@@ -61,8 +61,8 @@ public class SimpleHttpClient {
         return doHandle(res.toString(), requestContainer.getHandlers());
     }
 
-    private static String doHandle(String content, Class<? extends AbstractHandler<String>>[] handlersClasses){
-        for(Class<? extends AbstractHandler<String>> clazz : handlersClasses){
+    private static String doHandle(String content, Class<? extends AbstractHandler>[] handlersClasses){
+        for(Class<? extends AbstractHandler> clazz : handlersClasses){
             try {
                 AbstractHandler<String> handler = clazz.getConstructor().newInstance();
                 handler.setContent(content);
