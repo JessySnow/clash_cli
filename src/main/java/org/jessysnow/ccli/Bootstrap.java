@@ -1,19 +1,19 @@
-package org.jessysnow.controller;
+package org.jessysnow.ccli;
 
-import org.jessysnow.controller.pojo.net.nio.NIOHttpClient;
-import org.jessysnow.controller.pojo.enums.HttpParamEntry;
-import org.jessysnow.controller.pojo.enums.RequestContainer;
-import org.jessysnow.controller.pojo.net.SimpleHttpClient;
-import org.jessysnow.controller.view.Menu;
+import org.jessysnow.ccli.component.net.nio.NIOHttpClient;
+import org.jessysnow.ccli.component.enums.HttpParamEntry;
+import org.jessysnow.ccli.component.enums.RequestContainer;
+import org.jessysnow.ccli.component.net.SimpleHttpClient;
+import org.jessysnow.ccli.view.Menu;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Scanner;
 
-import static org.jessysnow.controller.utils.BootHelper.setHost;
-import static org.jessysnow.controller.utils.BootHelper.setPort;
-import static org.jessysnow.controller.utils.BootHelper.checkOptionValid;
+import static org.jessysnow.ccli.utils.BootHelper.setHost;
+import static org.jessysnow.ccli.utils.BootHelper.setPort;
+import static org.jessysnow.ccli.utils.BootHelper.checkOptionValid;
 
 /**
  * Entrance

@@ -1,10 +1,9 @@
-package org.jessysnow.controller.pojo.enums;
+package org.jessysnow.ccli.component.enums;
 
-import org.jessysnow.controller.handler.AbstractHandler;
-import org.jessysnow.controller.handler.impl.CliHelperHandler;
-import org.jessysnow.controller.handler.impl.HttpHeaderHandler;
-import org.jessysnow.controller.handler.impl.SliceHandler;
-import org.jessysnow.controller.pojo.net.io.InLineCliStream;
+import org.jessysnow.ccli.component.handler.AbstractHandler;
+import org.jessysnow.ccli.component.handler.impl.CliHelperHandler;
+import org.jessysnow.ccli.component.handler.impl.HttpHeaderHandler;
+import org.jessysnow.ccli.component.handler.impl.SliceHandler;
 
 import java.io.OutputStream;
 import java.util.HashMap;

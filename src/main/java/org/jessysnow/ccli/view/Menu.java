@@ -1,6 +1,6 @@
-package org.jessysnow.controller.view;
+package org.jessysnow.ccli.view;
 
-import org.jessysnow.controller.pojo.enums.Option;
+import org.jessysnow.ccli.component.enums.Option;
 
 /**
  * Console Menu

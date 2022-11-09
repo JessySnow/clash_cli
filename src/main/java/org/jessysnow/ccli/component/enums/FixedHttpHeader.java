@@ -1,6 +1,6 @@
-package org.jessysnow.controller.pojo.enums;
+package org.jessysnow.ccli.component.enums;
 
-import org.jessysnow.controller.Bootstrap;
+import org.jessysnow.ccli.Bootstrap;
 
 public enum FixedHttpHeader {
     GET_TRAFFIC(Bootstrap.host, Bootstrap.port, "/traffic"), GET_LOG(Bootstrap.host, Bootstrap.port, "/logs");

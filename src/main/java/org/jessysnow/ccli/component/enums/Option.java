@@ -1,4 +1,4 @@
-package org.jessysnow.controller.pojo.enums;
+package org.jessysnow.ccli.component.enums;
 
 // Menu option enum
 public enum Option {

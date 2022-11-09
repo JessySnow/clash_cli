@@ -1,6 +1,6 @@
-package org.jessysnow.controller.utils;
+package org.jessysnow.ccli.utils;
 
-import org.jessysnow.controller.Bootstrap;
+import org.jessysnow.ccli.Bootstrap;
 
 import java.net.MalformedURLException;
 import java.net.URL;

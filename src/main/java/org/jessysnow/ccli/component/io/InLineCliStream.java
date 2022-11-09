@@ -1,4 +1,4 @@
-package org.jessysnow.controller.pojo.net.io;
+package org.jessysnow.ccli.component.io;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;

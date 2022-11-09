@@ -1,4 +1,4 @@
-package org.jessysnow.controller.handler;
+package org.jessysnow.ccli.component.handler;
 
 public abstract class AbstractHandler<T> implements Handler<T> {
     protected T content;

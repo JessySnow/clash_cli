@@ -1,10 +1,9 @@
-package org.jessysnow.controller.pojo.net;
+package org.jessysnow.ccli.component.net;
 
-import org.jessysnow.controller.handler.AbstractHandler;
-import org.jessysnow.controller.pojo.net.io.InLineCliStream;
-import org.jessysnow.controller.pojo.net.nio.NIOHttpClient;
-import org.jessysnow.controller.pojo.enums.RequestContainer;
-import org.jessysnow.controller.utils.URLHelper;
+import org.jessysnow.ccli.component.handler.AbstractHandler;
+import org.jessysnow.ccli.component.net.nio.NIOHttpClient;
+import org.jessysnow.ccli.component.enums.RequestContainer;
+import org.jessysnow.ccli.utils.URLHelper;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;

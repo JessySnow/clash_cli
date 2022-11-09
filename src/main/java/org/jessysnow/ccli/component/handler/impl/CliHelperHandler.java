@@ -1,6 +1,6 @@
-package org.jessysnow.controller.handler.impl;
+package org.jessysnow.ccli.component.handler.impl;
 
-import org.jessysnow.controller.handler.AbstractHandler;
+import org.jessysnow.ccli.component.handler.AbstractHandler;
 
 import java.nio.ByteBuffer;
 

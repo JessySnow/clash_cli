@@ -1,4 +1,4 @@
-package org.jessysnow.controller.pojo.enums;
+package org.jessysnow.ccli.component.enums;
 
 /*
  * Map the http request param name to it's shown name in the console

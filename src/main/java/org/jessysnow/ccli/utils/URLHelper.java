@@ -1,7 +1,7 @@
-package org.jessysnow.controller.utils;
+package org.jessysnow.ccli.utils;
 
-import org.jessysnow.controller.pojo.enums.HttpParamEntry;
-import org.jessysnow.controller.pojo.enums.RequestContainer;
+import org.jessysnow.ccli.component.enums.HttpParamEntry;
+import org.jessysnow.ccli.component.enums.RequestContainer;
 
 import java.util.Map;
 
