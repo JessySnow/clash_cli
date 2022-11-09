@@ -18,7 +18,7 @@ import static org.jessysnow.controller.utils.BootHelper.checkOptionValid;
 /**
  * Entrance
  */
-public class Boot {
+public class Bootstrap {
     public static String host = "127.0.0.1";
     public static int port = 9090;
 

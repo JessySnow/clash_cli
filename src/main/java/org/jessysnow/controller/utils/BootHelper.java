@@ -1,6 +1,6 @@
 package org.jessysnow.controller.utils;
 
-import org.jessysnow.controller.Boot;
+import org.jessysnow.controller.Bootstrap;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,8 +12,8 @@ public class BootHelper {
      */
     public static void setPort(String port){
         try{
-            Boot.port = Integer.parseInt(port);
-            if(Boot.port > 65535 || Boot.port <= 0){
+            Bootstrap.port = Integer.parseInt(port);
+            if(Bootstrap.port > 65535 || Bootstrap.port <= 0){
                 throw new Exception("Port number out of range! Port: " + port);
             }
         }catch (NumberFormatException e){
@@ -39,15 +39,15 @@ public class BootHelper {
             System.out.println("Not a valid and host combination! Request URL: " + requestURL);
             System.exit(1);
         }
-        Boot.host = requestURL;
+        Bootstrap.host = requestURL;
     }
 
     /**
      * check if the option is valid
      */
     public static boolean checkOptionValid(int option){
-        if(option < 0 || option >= Boot.containers.length){
-            System.out.printf("Not a valid option, try enter a option number between %d and %d", 0, Boot.containers.length - 1);
+        if(option < 0 || option >= Bootstrap.containers.length){
+            System.out.printf("Not a valid option, try enter a option number between %d and %d", 0, Bootstrap.containers.length - 1);
             return false;
         }
         return true;

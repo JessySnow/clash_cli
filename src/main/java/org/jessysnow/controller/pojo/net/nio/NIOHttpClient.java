@@ -1,6 +1,6 @@
 package org.jessysnow.controller.pojo.net.nio;
 
-import org.jessysnow.controller.Boot;
+import org.jessysnow.controller.Bootstrap;
 import org.jessysnow.controller.handler.AbstractHandler;
 import org.jessysnow.controller.handler.Handler;
 import org.jessysnow.controller.pojo.enums.RequestContainer;
@@ -26,7 +26,7 @@ public class NIOHttpClient {
     // deal with http-stream api
     public static Void doRequest(RequestContainer requestContainer ,OutputStream out){
         Future<Void> stopDump = executor.submit(new consoleListener());
-        try(SocketChannel realTimeChannel = SocketChannel.open(new InetSocketAddress(Boot.host, Boot.port))){
+        try(SocketChannel realTimeChannel = SocketChannel.open(new InetSocketAddress(Bootstrap.host, Bootstrap.port))){
             realTimeChannel.configureBlocking(false);
             while (!realTimeChannel.finishConnect());
 
@@ -77,8 +77,8 @@ public class NIOHttpClient {
             }
         } catch (IOException e) {
             System.out.printf("Unknown error while building socket channel, check your host: %s, and port: %d\n",
-                                                                                            Boot.host,
-                                                                                            Boot.port);
+                                                                                            Bootstrap.host,
+                                                                                            Bootstrap.port);
             System.exit(1);
         }finally {
             // clean up
