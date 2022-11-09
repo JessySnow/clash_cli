@@ -1,6 +1,7 @@
 package org.jessysnow.controller.pojo.enums;
 
 import org.jessysnow.controller.handler.AbstractHandler;
+import org.jessysnow.controller.handler.impl.CliHelperHandler;
 import org.jessysnow.controller.handler.impl.HttpHeaderHandler;
 import org.jessysnow.controller.handler.impl.SliceHandler;
 import org.jessysnow.controller.pojo.net.io.InLineCliStream;
@@ -22,7 +23,7 @@ public enum RequestContainer {
             null, System.out, FixedHttpHeader.GET_LOG),
     DUMP_TRAFFIC("/traffic",
             RestfulMethod.GET,  null,  true,
-            new Class[]{HttpHeaderHandler.class}, System.out, FixedHttpHeader.GET_TRAFFIC),
+            new Class[]{HttpHeaderHandler.class, CliHelperHandler.class}, System.out, FixedHttpHeader.GET_TRAFFIC),
     GET_VERSION("/version",
             RestfulMethod.GET,  null,  false,  null,  null, null),
     GET_PROXIES("/proxies",

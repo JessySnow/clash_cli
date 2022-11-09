@@ -9,8 +9,6 @@ import java.util.Arrays;
 public class InLineCliStream extends FilterOutputStream {
     private int backSpaceCount;
     private int newLineCount;
-    private final int reFlushThreshold = 8;
-    private final byte BACKSPACE = '\b';
     private final byte NEWLINE = '\n';
     private final byte ENTER = '\r';
     private final byte SPACE = ' ';
@@ -34,6 +32,7 @@ public class InLineCliStream extends FilterOutputStream {
         out.write(byt);
         out.flush();
         this.backSpaceCount += 1;
+        int reFlushThreshold = 8;
         if(this.newLineCount >= reFlushThreshold){
             this.reFlush();
         }
@@ -73,6 +72,7 @@ public class InLineCliStream extends FilterOutputStream {
 
     private void reFlush(){
         byte[] backSpaces = new byte[backSpaceCount];
+        byte BACKSPACE = '\b';
         Arrays.fill(backSpaces, BACKSPACE);
         this.backSpaceCount = 0;
         this.newLineCount = 0;
@@ -84,6 +84,6 @@ public class InLineCliStream extends FilterOutputStream {
 
     @Override
     public void close() throws IOException {
-        super.close();
+        throw new UnsupportedOperationException("Don't close System.out");
     }
 }
