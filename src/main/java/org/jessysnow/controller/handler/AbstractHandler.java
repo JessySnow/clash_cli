@@ -1,19 +1,19 @@
 package org.jessysnow.controller.handler;
 
-public abstract class AbstractHandler implements ProxyInfoHandler{
-    protected String content;
+public abstract class AbstractHandler<T> implements ProxyInfoHandler{
+    protected T content;
 
     public AbstractHandler(){}
 
-    public AbstractHandler(String content){
+    public AbstractHandler(T content){
         this.content = content;
     }
 
-    public AbstractHandler setContent(String content) {
+    public AbstractHandler setContent(T content) {
         this.content = content;
         return this;
     }
 
     @Override
-    public abstract String handle();
+    public abstract T handle();
 }

@@ -21,6 +21,8 @@ public class NIOHttpClient {
 
     private static final String logsHeader;
     private static final String trafficHeader;
+    private static final byte NEWLINE = '\n';
+    private static final byte ENTER = '\r';
     public static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     static{
@@ -62,7 +64,7 @@ public class NIOHttpClient {
 
     // deal with http-stream api
     private static void doRequest(ByteBuffer header ,OutputStream out){
-        Future<Boolean> stopDump = executor.submit(new consoleListener());
+        Future<Void> stopDump = executor.submit(new consoleListener());
         try(SocketChannel realTimeChannel = SocketChannel.open(new InetSocketAddress(Boot.host, Boot.port))){
             realTimeChannel.configureBlocking(false);
             while (!realTimeChannel.finishConnect());
@@ -116,15 +118,19 @@ public class NIOHttpClient {
         }
     }
 
+    private static void doHandle(ByteBuffer content){
+
+    }
+
     // listen on System.in
-    private static class consoleListener implements Callable<Boolean> {
+    private static class consoleListener implements Callable<Void> {
         @Override
-        public Boolean call() throws Exception {
+        public Void call() throws Exception {
             // Don't close it, cause System.in would be used later
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String line;
             while (null != (line = reader.readLine()) && !line.contains("C"));
-            return true;
+            return null;
         }
     }
 }
