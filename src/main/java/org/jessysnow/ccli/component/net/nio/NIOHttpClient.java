@@ -36,9 +36,9 @@ public class NIOHttpClient {
             ByteBuffer readBuffer = ByteBuffer.allocate(1024);
             while(!stopDump.isDone() && realTimeChannel.read(readBuffer) != -1){
                 readBuffer.flip();
-                doHandle(readBuffer, requestContainer.getHandlers());
-                while (readBuffer.hasRemaining()){
-                    out.write((char)readBuffer.get());
+                ByteBuffer res = doHandle(readBuffer, requestContainer.getHandlers());
+                while (res.hasRemaining()){
+                    out.write((char)res.get());
                 }
                 readBuffer.clear();
             }
@@ -54,9 +54,9 @@ public class NIOHttpClient {
         return null;
     }
 
-    private static void doHandle(ByteBuffer content, Class<? extends AbstractHandler>[] handlersClasses){
+    private static ByteBuffer doHandle(ByteBuffer content, Class<? extends AbstractHandler>[] handlersClasses){
         if(null == handlersClasses || 0 == handlersClasses.length){
-            return;
+            return content;
         }
         if(null == cachedHandler){
             cachedHandler = new Handler[handlersClasses.length];
@@ -69,8 +69,9 @@ public class NIOHttpClient {
         }
 
         for (Handler<ByteBuffer> byteBufferHandler : cachedHandler) {
-            byteBufferHandler.handle(content);
+            content = byteBufferHandler.handle(content);
         }
+        return content;
     }
 
     // listen on System.in
