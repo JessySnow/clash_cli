@@ -1,7 +1,6 @@
 package org.jessysnow.controller.handler.impl;
 
 import org.jessysnow.controller.handler.AbstractHandler;
-import org.jessysnow.controller.handler.ProxyInfoHandler;
 
 /**
  * Get proxies name array part from response content

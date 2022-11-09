@@ -4,6 +4,9 @@ import org.jessysnow.controller.handler.AbstractHandler;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Remove http header from http response
+ */
 public class HttpHeaderHandler extends AbstractHandler<ByteBuffer> {
 
     private static final byte NEWLINE = '\n';
@@ -11,6 +14,11 @@ public class HttpHeaderHandler extends AbstractHandler<ByteBuffer> {
 
     @Override
     public ByteBuffer handle() {
-        return null;
+        return content;
+    }
+
+    @Override
+    public ByteBuffer handle(ByteBuffer byteBuffer) {
+        return byteBuffer;
     }
 }

@@ -1,16 +1,17 @@
 package org.jessysnow.controller.pojo.net.nio;
 
 import org.jessysnow.controller.Boot;
+import org.jessysnow.controller.handler.Handler;
 import org.jessysnow.controller.pojo.enums.RequestContainer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.Arrays;
 import java.util.concurrent.*;
 
 /**
@@ -19,6 +20,7 @@ import java.util.concurrent.*;
  */
 public class NIOHttpClient {
     public static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static Handler<ByteBuffer>[] cachedHandler = null;
 
     // deal with http-stream api
     public static Void doRequest(RequestContainer requestContainer ,OutputStream out){
@@ -26,42 +28,48 @@ public class NIOHttpClient {
         try(SocketChannel realTimeChannel = SocketChannel.open(new InetSocketAddress(Boot.host, Boot.port))){
             realTimeChannel.configureBlocking(false);
             while (!realTimeChannel.finishConnect());
+
             // invoke
             realTimeChannel.write(ByteBuffer.wrap(requestContainer.getFixedHttpHeader().getBytes()));
-            // unblocking read, loop until EOF
-            ByteBuffer readBuffer = ByteBuffer.allocate(512);
+            // non-blocking read, loop until EOF
+            ByteBuffer readBuffer = ByteBuffer.allocate(256);
             boolean headTag = true;
             while(!stopDump.isDone() && realTimeChannel.read(readBuffer) != -1){
-
+//                readBuffer.flip();
+//                // skip header
+//                byte preVal1 = 0;
+//                byte preVal2 = 0;
+//                while (readBuffer.hasRemaining()){
+//                    byte nowVal1 = readBuffer.get();
+//                    if(readBuffer.hasRemaining()){
+//                        byte nowVal2 = readBuffer.get();
+//                        if((nowVal2 == 10 && nowVal1 == 13) && ((preVal2 == 10 && preVal1 == 13) || !headTag)){
+//                            if(headTag){
+//                                while (readBuffer.hasRemaining()){
+//                                    nowVal1 = readBuffer.get();
+//                                    if(readBuffer.hasRemaining()){
+//                                        nowVal2 = readBuffer.get();
+//                                        if(nowVal2 == 10 && nowVal1 == 13){
+//                                            break;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            headTag = false;
+//                            break;
+//                        }
+//                        preVal2 = nowVal2;
+//                        preVal1 = nowVal1;
+//                    }
+//                }
+//
+//                // output body
+//                while (readBuffer.hasRemaining()){
+//                    out.write((char)readBuffer.get());
+//                }
+//                readBuffer.clear();
                 readBuffer.flip();
-                // skip header
-                byte preVal1 = 0;
-                byte preVal2 = 0;
-                while (readBuffer.hasRemaining()){
-                    byte nowVal1 = readBuffer.get();
-                    if(readBuffer.hasRemaining()){
-                        byte nowVal2 = readBuffer.get();
-                        if((nowVal2 == 10 && nowVal1 == 13) && ((preVal2 == 10 && preVal1 == 13) || !headTag)){
-                            if(headTag){
-                                while (readBuffer.hasRemaining()){
-                                    nowVal1 = readBuffer.get();
-                                    if(readBuffer.hasRemaining()){
-                                        nowVal2 = readBuffer.get();
-                                        if(nowVal2 == 10 && nowVal1 == 13){
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            headTag = false;
-                            break;
-                        }
-                        preVal2 = nowVal2;
-                        preVal1 = nowVal1;
-                    }
-                }
-
-                // output body
+                doHandle(requestContainer,readBuffer);
                 while (readBuffer.hasRemaining()){
                     out.write((char)readBuffer.get());
                 }
@@ -72,12 +80,28 @@ public class NIOHttpClient {
                                                                                             Boot.host,
                                                                                             Boot.port);
             System.exit(1);
-            // fixme don't ignore runtime exception
+        }finally {
+            // clean up
+            cachedHandler = null;
         }
-
         return null;
     }
 
+    private static void doHandle(RequestContainer container, ByteBuffer content){
+        if(null == cachedHandler){
+            cachedHandler = new Handler[container.getHandlers().length];
+            for (int i = 0; i < cachedHandler.length; i++) {
+                try {
+                    cachedHandler[i] = container.getHandlers()[i].getConstructor().newInstance();
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                         NoSuchMethodException ignored) {}
+            }
+        }
+
+        for (Handler<ByteBuffer> byteBufferHandler : cachedHandler) {
+            byteBufferHandler.handle(content);
+        }
+    }
 
     // listen on System.in
     private static class consoleListener implements Callable<Void> {
