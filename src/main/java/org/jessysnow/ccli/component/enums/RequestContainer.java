@@ -1,10 +1,7 @@
 package org.jessysnow.ccli.component.enums;
 
 import org.jessysnow.ccli.component.handler.AbstractHandler;
-import org.jessysnow.ccli.component.handler.impl.CliHelperHandler;
-import org.jessysnow.ccli.component.handler.impl.HttpHeaderHandler;
-import org.jessysnow.ccli.component.handler.impl.SliceHandler;
-import org.jessysnow.ccli.component.handler.impl.TrafficHandler;
+import org.jessysnow.ccli.component.handler.impl.*;
 import org.jessysnow.ccli.component.io.TrafficStream;
 
 import java.io.OutputStream;
@@ -21,7 +18,7 @@ public enum RequestContainer {
 
     DUMP_LOG("/logs",
             RestfulMethod.GET,  null,  true,
-            null, System.out, FixedHttpHeader.GET_LOG),
+            new Class[]{HttpHeaderHandler.class, LogHandler.class}, System.out, FixedHttpHeader.GET_LOG),
     DUMP_TRAFFIC("/traffic",
             RestfulMethod.GET,  null,  true,
             new Class[]{HttpHeaderHandler.class, CliHelperHandler.class, TrafficHandler.class}, new TrafficStream(System.out), FixedHttpHeader.GET_TRAFFIC),
