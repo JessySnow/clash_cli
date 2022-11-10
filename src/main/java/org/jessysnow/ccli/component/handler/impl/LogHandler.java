@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 
-// FIXME UTF-8 Encoding issue
+// FIXME UTF-16 Encoding issue
 /**
  * Format clash's log
  * origin:
@@ -29,6 +29,7 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
 
     @Override
     public ByteBuffer handle(ByteBuffer byteBuffer) {
+        char aChar = byteBuffer.getChar();
         handleLogType(byteBuffer);
         handleConnectionType(byteBuffer);
         handleOriginAddress(byteBuffer);
@@ -92,13 +93,15 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
         destinationAddressBuilder.append((char) SPACE);
         this.destinationAddress = destinationAddressBuilder.toString();
     }
+
+    //FIXME UTF-16 encoding
     private void handleNodeInfo(ByteBuffer byteBuffer){
-        byte val;
+        char val;
         StringBuilder nodeInfoBuilder = new StringBuilder();
-        while (byteBuffer.hasRemaining() && (val = byteBuffer.get()) != LEFT_BRACKETS);
+        while (byteBuffer.hasRemaining() && (val = byteBuffer.getChar()) != LEFT_BRACKETS);
         nodeInfoBuilder.append((char) LEFT_BRACKETS);
-        while (byteBuffer.hasRemaining() && (val = byteBuffer.get()) != RIGHT_BRACKETS){
-            nodeInfoBuilder.append((char) val);
+        while (byteBuffer.hasRemaining() && (val = byteBuffer.getChar()) != RIGHT_BRACKETS){
+            nodeInfoBuilder.append(val);
         }
         nodeInfoBuilder.append((char) RIGHT_BRACKETS);
         this.nodeInfo = nodeInfoBuilder.toString();
@@ -109,6 +112,7 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
         LogHandler logHandler = new LogHandler();
         ByteBuffer handle = logHandler.handle(buffer);
         while (handle.hasRemaining()){
+            System.out.print((char) handle.get());
         }
     }
 }
