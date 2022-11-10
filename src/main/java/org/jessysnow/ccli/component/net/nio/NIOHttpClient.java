@@ -81,7 +81,8 @@ public class NIOHttpClient {
             // Don't close it, cause System.in would be used later
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String line;
-            while (null != (line = reader.readLine()) && !line.contains("C"));
+            while (null == reader.readLine());
+            System.out.println("\n");
             return null;
         }
     }

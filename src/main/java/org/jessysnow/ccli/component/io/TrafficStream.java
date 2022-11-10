@@ -17,7 +17,7 @@ public class TrafficStream extends FilterOutputStream {
             throw new RuntimeException("Only accept System.out.");
         }
         this.backSpaceCount = 0;
-        this.outPutThreshold = 4;
+        this.outPutThreshold = 500;
         this.dotCount = 0;
     }
 
@@ -28,8 +28,17 @@ public class TrafficStream extends FilterOutputStream {
     // ignore some traffic info
     @Override
     public void write(int b) throws IOException {
-        out.write(b);
-        out.flush();
+        if(this.dotCount == 0){
+            out.write(b);
+            out.flush();
+            this.backSpaceCount ++;
+        }
+        if((byte)b == '.'){
+            this.dotCount = (dotCount + 1) % outPutThreshold;
+            if(dotCount == 0){
+                this.reFlush();
+            }
+        }
     }
 
     @Override
