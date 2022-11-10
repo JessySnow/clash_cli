@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class TrafficStream extends FilterOutputStream {
     private int backSpaceCount;
-    private int reFlushThreshold;
+    private final int reFlushThreshold;
     private int outPutCount;
 
     public TrafficStream(OutputStream out) {

@@ -19,6 +19,7 @@ public class TrafficHandler extends AbstractHandler<ByteBuffer> {
     private static byte upLimit = '0'; // 48
     private static byte downLimit = '9'; // 57
 
+
     public TrafficHandler() {
         super();
         this.currentDown = 0;
@@ -60,7 +61,7 @@ public class TrafficHandler extends AbstractHandler<ByteBuffer> {
 
         StringBuilder number = new StringBuilder();
         number.append((char) readEd);
-        while (content.hasRemaining() && !((readEd = content.get()) > upLimit || readEd < downLimit)){
+        while (content.hasRemaining() && ((readEd = content.get()) <= upLimit && readEd >= downLimit)){
             number.append((char) readEd);
         }
         return Integer.parseInt(number.toString());
@@ -68,5 +69,13 @@ public class TrafficHandler extends AbstractHandler<ByteBuffer> {
 
     private Integer handleDown(){
         return handleUp();
+    }
+
+    public static void main(String[] args) {
+        ByteBuffer buffer = ByteBuffer.wrap("{up:\"10244\",down:\"2323\"}".getBytes());
+        ByteBuffer handle = new TrafficHandler().setContent(buffer).handle(buffer);
+        while(handle.hasRemaining()){
+            System.out.print((char)handle.get());
+        }
     }
 }
