@@ -16,8 +16,8 @@ public class TrafficHandler extends AbstractHandler<ByteBuffer> {
     private long totalDown;
     private int maxUp;
     private int maxDown;
-    private static byte upLimit = '0'; // 48
-    private static byte downLimit = '9'; // 57
+    private static byte upLimit = (byte)'9'; // 48
+    private static byte downLimit = (byte)'0'; // 57
 
 
     public TrafficHandler() {
@@ -37,8 +37,8 @@ public class TrafficHandler extends AbstractHandler<ByteBuffer> {
 
     @Override
     public ByteBuffer handle(ByteBuffer byteBuffer) {
-        this.currentUp = handleUp();
-        this.currentDown = handleDown();
+        this.currentUp = handleUp(byteBuffer);
+        this.currentDown = handleDown(byteBuffer);
         this.totalUp += currentUp;
         this.totalDown += currentDown;
         this.maxUp = Math.max(this.maxUp, currentUp);
@@ -52,30 +52,22 @@ public class TrafficHandler extends AbstractHandler<ByteBuffer> {
         return ByteBuffer.wrap(output.getBytes());
     }
 
-    private Integer handleUp(){
-        if(content == null || !content.hasRemaining()){
+    private Integer handleUp(ByteBuffer byteBuffer){
+        if(byteBuffer == null || !byteBuffer.hasRemaining()){
             return 0;
         }
         byte readEd = 0;
-        while (content.hasRemaining() && ((readEd = content.get()) > upLimit || readEd < downLimit));
+        while (byteBuffer.hasRemaining() && ((readEd = byteBuffer.get()) > upLimit || readEd < downLimit));
 
         StringBuilder number = new StringBuilder();
         number.append((char) readEd);
-        while (content.hasRemaining() && ((readEd = content.get()) <= upLimit && readEd >= downLimit)){
+        while (byteBuffer.hasRemaining() && ((readEd = byteBuffer.get()) <= upLimit && readEd >= downLimit)){
             number.append((char) readEd);
         }
         return Integer.parseInt(number.toString());
     }
 
-    private Integer handleDown(){
-        return handleUp();
-    }
-
-    public static void main(String[] args) {
-        ByteBuffer buffer = ByteBuffer.wrap("{up:\"10244\",down:\"2323\"}".getBytes());
-        ByteBuffer handle = new TrafficHandler().setContent(buffer).handle(buffer);
-        while(handle.hasRemaining()){
-            System.out.print((char)handle.get());
-        }
+    private Integer handleDown(ByteBuffer byteBuffer){
+        return handleUp(byteBuffer);
     }
 }

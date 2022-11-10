@@ -33,7 +33,7 @@ public class NIOHttpClient {
             // invoke
             realTimeChannel.write(ByteBuffer.wrap(requestContainer.getFixedHttpHeader().getBytes()));
             // non-blocking read, loop until EOF
-            ByteBuffer readBuffer = ByteBuffer.allocate(1024);
+            ByteBuffer readBuffer = ByteBuffer.allocate(512);
             while(!stopDump.isDone() && realTimeChannel.read(readBuffer) != -1){
                 readBuffer.flip();
                 ByteBuffer res = doHandle(readBuffer, requestContainer.getHandlers());

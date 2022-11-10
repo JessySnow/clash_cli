@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 public class TrafficStream extends FilterOutputStream {
     private int backSpaceCount;
-    private final int reFlushThreshold;
-    private int outPutCount;
+    private final int outPutThreshold;
+    private  int dotCount;
 
     public TrafficStream(OutputStream out) {
         super(out);
@@ -17,23 +17,19 @@ public class TrafficStream extends FilterOutputStream {
             throw new RuntimeException("Only accept System.out.");
         }
         this.backSpaceCount = 0;
-        this.outPutCount = 0;
-        this.reFlushThreshold = 4;
+        this.outPutThreshold = 4;
+        this.dotCount = 0;
     }
 
+    /**
+     * @see org.jessysnow.ccli.component.handler.impl.TrafficHandler;
+     * @param b   {@inheritDoc}
+     */
+    // ignore some traffic info
     @Override
     public void write(int b) throws IOException {
-        if(outPutCount >= reFlushThreshold){
-            reFlush();
-            outPutCount = 0;
-        }
-        byte byt = (byte) b;
-        if('}' == byt){
-            outPutCount += 1;
-        }
-        out.write(byt);
+        out.write(b);
         out.flush();
-        this.backSpaceCount += 1;
     }
 
     @Override
