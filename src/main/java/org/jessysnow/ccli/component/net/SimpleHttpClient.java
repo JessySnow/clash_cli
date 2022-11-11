@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * A simple single thread http client
- * TODO RESTFul 请求参数编码
  */
 public class SimpleHttpClient {
     public static Object request(URL baseURL, RequestContainer requestContainer){

@@ -18,7 +18,6 @@ import java.util.concurrent.*;
 /**
  * It's a no blocking http client
  * mainly used to invoke a stream-http-api
- * TODO RESTFul 请求参数编码
  */
 public class NIOHttpClient {
     public static final ExecutorService executor = Executors.newFixedThreadPool(1);
