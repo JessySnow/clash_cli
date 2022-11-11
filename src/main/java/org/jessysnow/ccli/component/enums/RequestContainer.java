@@ -1,10 +1,7 @@
 package org.jessysnow.ccli.component.enums;
 
 import org.jessysnow.ccli.component.handler.AbstractHandler;
-import org.jessysnow.ccli.component.handler.impl.CliHelperHandler;
-import org.jessysnow.ccli.component.handler.impl.HttpHeaderHandler;
-import org.jessysnow.ccli.component.handler.impl.SliceHandler;
-import org.jessysnow.ccli.component.handler.impl.TrafficHandler;
+import org.jessysnow.ccli.component.handler.impl.*;
 import org.jessysnow.ccli.component.io.TrafficStream;
 
 import java.io.OutputStream;
@@ -30,7 +27,7 @@ public enum RequestContainer {
     GET_PROXIES("/proxies",
             RestfulMethod.GET,
             null,
-            false, new Class[]{SliceHandler.class}, null, null),
+            false, new Class[]{SliceHandler.class, NodeHandler.class}, null, null),
     GET_SPECIFIC_PROXY_INFO("/proxies/:name",
             RestfulMethod.GET,
             constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY}),
