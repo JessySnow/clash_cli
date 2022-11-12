@@ -18,7 +18,7 @@ public enum RequestContainer {
 
     DUMP_LOG("/logs",
             RestfulMethod.GET,  null,  true,
-            new Class[]{HttpHeaderHandler.class, LogHandler.class}, System.out, FixedHttpHeader.GET_LOG),
+            new Class[]{HttpHeaderHandler.class}, System.out, FixedHttpHeader.GET_LOG),
     DUMP_TRAFFIC("/traffic",
             RestfulMethod.GET,  null,  true,
             new Class[]{HttpHeaderHandler.class, CliHelperHandler.class, TrafficHandler.class}, new TrafficStream(System.out), FixedHttpHeader.GET_TRAFFIC),

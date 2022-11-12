@@ -3,10 +3,14 @@ package org.jessysnow.ccli.component.handler.impl;
 import org.jessysnow.ccli.component.handler.AbstractHandler;
 
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 
 
-// FIXME UTF-16 Encoding issue
+// FIXME UTF-8 Encoding issue
 /**
  * Format clash's log
  * origin:
@@ -29,17 +33,19 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
 
     @Override
     public ByteBuffer handle(ByteBuffer byteBuffer) {
-        char aChar = byteBuffer.getChar();
-        handleLogType(byteBuffer);
-        handleConnectionType(byteBuffer);
-        handleOriginAddress(byteBuffer);
-        handleDestinationAddress(byteBuffer);
-        handleNodeInfo(byteBuffer);
+        CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
+        try {
+            CharBuffer decoded = decoder.decode(byteBuffer);
+            handleLogType(decoded);
+            handleConnectionType(decoded);
+            handleOriginAddress(decoded);
+            handleDestinationAddress(decoded);
+            handleNodeInfo(decoded);
 
-        StringBuilder res = new StringBuilder();
-        res.append(this.logType).append(": ").append(nodeInfo).append(" || ").append(connectionType).append(originAddress)
-                .append("-->").append(destinationAddress);
-        return ByteBuffer.wrap(res.toString().getBytes());
+            String res = this.logType + ": " + this.nodeInfo + " || " + this.connectionType + this.originAddress +
+                    "-->" + this.destinationAddress;
+            return ByteBuffer.wrap(res.getBytes());
+        } catch (CharacterCodingException e) {return ByteBuffer.allocate(0);}
     }
 
     private static final byte COLON = ':';
@@ -50,8 +56,8 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
     private static final byte SPACE = ' ';
 
     // from ':' -> ','
-    private void handleLogType(ByteBuffer byteBuffer){
-        byte val;
+    private void handleLogType(CharBuffer byteBuffer){
+        char val;
         StringBuilder logTypeBuilder = new StringBuilder();
         // skip to ':'
         while (byteBuffer.hasRemaining() && (val = byteBuffer.get()) != COLON);
@@ -62,8 +68,8 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
         }
         this.logType = logTypeBuilder.toString();
     }
-    private void handleConnectionType(ByteBuffer byteBuffer){
-        byte val;
+    private void handleConnectionType(CharBuffer byteBuffer){
+        char val;
         StringBuilder connectionTypeBuilder = new StringBuilder();
         while (byteBuffer.hasRemaining() && (val = byteBuffer.get()) != LEFT_BRACKETS);
         while (byteBuffer.hasRemaining() && (val = byteBuffer.get()) != RIGHT_BRACKETS){
@@ -71,8 +77,8 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
         }
         this.connectionType = connectionTypeBuilder.toString();
     }
-    private void handleOriginAddress(ByteBuffer byteBuffer){
-        byte val;
+    private void handleOriginAddress(CharBuffer byteBuffer){
+        char val;
         StringBuilder originAddressBuilder = new StringBuilder();
         while (byteBuffer.hasRemaining() && (val = byteBuffer.get()) != SPACE);
         originAddressBuilder.append((char) SPACE);
@@ -82,8 +88,8 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
         originAddressBuilder.append((char) SPACE);
         this.originAddress = originAddressBuilder.toString();
     }
-    private void handleDestinationAddress(ByteBuffer byteBuffer){
-        byte val;
+    private void handleDestinationAddress(CharBuffer byteBuffer){
+        char val;
         StringBuilder destinationAddressBuilder = new StringBuilder();
         while (byteBuffer.hasRemaining() && (val = byteBuffer.get()) != SPACE);
         destinationAddressBuilder.append((char) SPACE);
@@ -94,25 +100,31 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
         this.destinationAddress = destinationAddressBuilder.toString();
     }
 
-    //FIXME UTF-16 encoding
-    private void handleNodeInfo(ByteBuffer byteBuffer){
-        char val;
+    //FIXME UTF-8 encoding
+    private void handleNodeInfo(CharBuffer byteBuffer){
         StringBuilder nodeInfoBuilder = new StringBuilder();
-        while (byteBuffer.hasRemaining() && (val = byteBuffer.getChar()) != LEFT_BRACKETS);
+        char val;
+        while (byteBuffer.hasRemaining() && (byteBuffer.get()) != LEFT_BRACKETS){
+            continue;
+        }
         nodeInfoBuilder.append((char) LEFT_BRACKETS);
-        while (byteBuffer.hasRemaining() && (val = byteBuffer.getChar()) != RIGHT_BRACKETS){
+        while (byteBuffer.hasRemaining() && (val = byteBuffer.get()) != RIGHT_BRACKETS){
             nodeInfoBuilder.append(val);
         }
         nodeInfoBuilder.append((char) RIGHT_BRACKETS);
         this.nodeInfo = nodeInfoBuilder.toString();
     }
 
-    public static void main(String[] args) {
-        ByteBuffer buffer = ByteBuffer.wrap("{\"type\":\"info\",\"payload\":\"[TCP] 127.0.0.1:59656 --\\u003e www.gstatic.com:443 match DomainSuffix(gstatic.com) using Bitz Net[\uD83C\uDDF9\uD83C\uDDFC 台湾-边缘访问 BGP]\"}".getBytes());
-        LogHandler logHandler = new LogHandler();
-        ByteBuffer handle = logHandler.handle(buffer);
-        while (handle.hasRemaining()){
-            System.out.print((char) handle.get());
-        }
-    }
+//    public static void main(String[] args) throws CharacterCodingException {
+//        ByteBuffer buffer = ByteBuffer.wrap("{\"type\":\"info\",\"payload\":\"[TCP] 127.0.0.1:59656 --\\u003e www.gstatic.com:443 match DomainSuffix(gstatic.com) using Bitz Net[\uD83C\uDDF9\uD83C\uDDFC 台湾-边缘访问 BGP]\"}".getBytes());
+////        CharsetDecoder decoder = Charset.forName("UTF-8").newDecoder();
+////        CharBuffer cb = decoder.decode(buffer);
+////        while (cb.hasRemaining()){
+////            System.out.print(cb.get());
+////        }
+////        ByteBuffer handle = new LogHandler().handle(buffer);
+////        while (handle.hasRemaining()){
+////            System.out.print((char)handle.get());
+////        }
+//    }
 }
