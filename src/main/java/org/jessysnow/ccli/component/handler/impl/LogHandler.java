@@ -36,6 +36,9 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
         CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
         try {
             CharBuffer decoded = decoder.decode(byteBuffer);
+            if(!decoded.hasRemaining()){
+                return ByteBuffer.allocate(0);
+            }
             handleLogType(decoded);
             handleConnectionType(decoded);
             handleOriginAddress(decoded);
@@ -115,16 +118,12 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
         this.nodeInfo = nodeInfoBuilder.toString();
     }
 
-//    public static void main(String[] args) throws CharacterCodingException {
-//        ByteBuffer buffer = ByteBuffer.wrap("{\"type\":\"info\",\"payload\":\"[TCP] 127.0.0.1:59656 --\\u003e www.gstatic.com:443 match DomainSuffix(gstatic.com) using Bitz Net[\uD83C\uDDF9\uD83C\uDDFC 台湾-边缘访问 BGP]\"}".getBytes());
-////        CharsetDecoder decoder = Charset.forName("UTF-8").newDecoder();
-////        CharBuffer cb = decoder.decode(buffer);
-////        while (cb.hasRemaining()){
-////            System.out.print(cb.get());
-////        }
-////        ByteBuffer handle = new LogHandler().handle(buffer);
-////        while (handle.hasRemaining()){
-////            System.out.print((char)handle.get());
-////        }
-//    }
+    public static void main(String[] args) throws CharacterCodingException {
+        ByteBuffer buffer = ByteBuffer.wrap("{\"type\":\"info\",\"payload\":\"[TCP] 127.0.0.1:59656 --\\u003e www.gstatic.com:443 match DomainSuffix(gstatic.com) using Bitz Net[\uD83C\uDDF9\uD83C\uDDFC 台湾-边缘访问 BGP]\"}".getBytes());
+        ByteBuffer handle = new LogHandler().handle(buffer);
+        CharBuffer cb = StandardCharsets.UTF_8.decode(handle);
+        while (cb.hasRemaining()){
+            System.out.print(cb.get());
+        }
+    }
 }
