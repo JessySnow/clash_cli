@@ -1,18 +1,21 @@
 # clash_cli
 
-A simple clash_core cli. Implemented in Java
-
-![pic1](./pictures/pic1.png)
+> A simple clash_core RESTful interactive cli. Implemented in Java.
+![pic1](./pictures/Bootstrap.png)
 
 ## Supported api
-- Dump real-time traffic to console
-- Dump real-time log to console
-- Get information of all proxies
-- Get information of specific proxy
+- Dump real-time traffic to console ☑️
+- Dump real-time log to console ☑️
+- Get information of all proxies ☑️
+- Get information of specific proxy ☑️
 - Select specific proxy
-- Show all proxies info 
+- Show all proxies info ☑️
 
-***Options 0 and 1 are HTTP streaming API, enter C to exit***
+***Options 0 and 1 are HTTP streaming API, press enter to exit***
 
 ## Environment
-- JDK7+
+- JDK8+ (Runtime)
+- Maven (Compile)
+
+## Dependency
+- Gson
