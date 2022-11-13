@@ -5,7 +5,9 @@ package org.jessysnow.ccli.component.enums;
  */
 public enum HttpParamEntry {
 
-    PROXY(":name","proxy name");
+    PROXY(":name","proxy name"),
+    TIMEOUT(":timeout", "timeout(eg: 2000ms)"),
+    TEST_URL(":url", "test url(eg: https://www.google.com)");
 
     private final String paramPlaceholder;
     private final String paramShownName;
