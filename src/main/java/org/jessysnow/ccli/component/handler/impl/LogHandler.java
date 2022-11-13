@@ -10,7 +10,6 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 
 
-// FIXME UTF-8 Encoding issue
 /**
  * Format clash's log
  * origin:
@@ -46,7 +45,7 @@ public class LogHandler extends AbstractHandler<ByteBuffer> {
             handleNodeInfo(decoded);
 
             String res = this.logType + ": " + this.nodeInfo + " || " + this.connectionType + this.originAddress +
-                    "-->" + this.destinationAddress;
+                    "-->" + this.destinationAddress + "\n";
             return ByteBuffer.wrap(res.getBytes());
         } catch (CharacterCodingException e) {return ByteBuffer.allocate(0);}
     }
