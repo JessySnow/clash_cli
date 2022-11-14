@@ -1,6 +1,6 @@
 package org.jessysnow.ccli.view;
 
-import org.jessysnow.ccli.component.enums.Option;
+import org.jessysnow.ccli.enums.Option;
 
 /**
  * Console Menu

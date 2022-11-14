@@ -1,11 +1,8 @@
-package org.jessysnow.ccli.component.handler.impl;
-
-import org.jessysnow.ccli.component.handler.AbstractHandler;
+package org.jessysnow.ccli.component.handler;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 
@@ -18,17 +15,12 @@ import java.nio.charset.StandardCharsets;
  * sample:
  *  info: Bitz Net[🇹🇼 台湾-边缘访问 BGP] || [TCP] 127.0.0.1:59656 -->  www.gstatic.com:443
  */
-public class LogHandler extends AbstractHandler<ByteBuffer> {
+public class LogHandler extends StatelessHandler<ByteBuffer> {
     private String logType;
     private String nodeInfo;
     private String connectionType;
     private String originAddress;
     private String destinationAddress;
-
-    @Override
-    public ByteBuffer handle() {
-        throw new UnsupportedOperationException("LogHandler doesn't support this method!");
-    }
 
     @Override
     public ByteBuffer handle(ByteBuffer byteBuffer) {

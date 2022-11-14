@@ -1,8 +1,7 @@
-package org.jessysnow.ccli.component.net.oio;
+package org.jessysnow.ccli.component.net;
 
-import org.jessysnow.ccli.component.handler.AbstractHandler;
-import org.jessysnow.ccli.component.net.nio.NIOHttpClient;
-import org.jessysnow.ccli.component.enums.RequestContainer;
+import org.jessysnow.ccli.component.handler.StatelessHandler;
+import org.jessysnow.ccli.enums.RequestContainer;
 import org.jessysnow.ccli.utils.URLHelper;
 
 import java.io.*;
@@ -17,7 +16,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class SimpleHttpClient {
     // Restful invoke
-    public static String doRequest(URL baseURL, RequestContainer requestContainer){
+    public String doRequest(URL baseURL, RequestContainer requestContainer){
         URL requestURL;
         HttpURLConnection connection;
         BufferedReader reader = null;
@@ -53,15 +52,17 @@ public class SimpleHttpClient {
         return doHandle(res.toString(), requestContainer.getHandlers());
     }
 
-    private static String doHandle(String content, Class<? extends AbstractHandler>[] handlersClasses){
+    private String doHandle(String content, Class<? extends StatelessHandler>[] handlersClasses){
         if(null == handlersClasses) return content;
-        for(Class<? extends AbstractHandler> clazz : handlersClasses){
+        for(Class<? extends StatelessHandler> clazz : handlersClasses){
             try {
-                AbstractHandler<String> handler = clazz.getConstructor().newInstance();
-                handler.setContent(content);
-                content = handler.handle();
+                StatelessHandler<String> handler = clazz.getConstructor().newInstance();
+                content = handler.handle(content);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException e) {
+                System.out.println("Failed to process content.");
+                return content;
+            }catch(Exception e){
                 System.out.println("Failed to process content.");
                 return content;
             }

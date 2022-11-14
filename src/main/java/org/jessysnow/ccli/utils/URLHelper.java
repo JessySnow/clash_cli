@@ -1,7 +1,7 @@
 package org.jessysnow.ccli.utils;
 
-import org.jessysnow.ccli.component.enums.HttpParamEntry;
-import org.jessysnow.ccli.component.enums.RequestContainer;
+import org.jessysnow.ccli.enums.HttpParamEntry;
+import org.jessysnow.ccli.enums.RequestContainer;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

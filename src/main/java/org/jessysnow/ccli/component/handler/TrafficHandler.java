@@ -1,6 +1,6 @@
-package org.jessysnow.ccli.component.handler.impl;
+package org.jessysnow.ccli.component.handler;
 
-import org.jessysnow.ccli.component.handler.AbstractHandler;
+import org.jessysnow.ccli.component.handler.StatelessHandler;
 
 import java.nio.ByteBuffer;
 
@@ -9,15 +9,13 @@ import java.nio.ByteBuffer;
  * sample :
  * Up: 1024 KB/s, Down: 10455 KB/s, MaxUp: 10344KB/s, MaxDown: 23123KB/s, Total-Up: 10343 KB, Total-Down: 43278 KB.
  */
-public class TrafficHandler extends AbstractHandler<ByteBuffer> {
+public class TrafficHandler extends StatelessHandler<ByteBuffer> {
     private int currentUp;
     private int currentDown;
     private long totalUp;
     private long totalDown;
     private int maxUp;
     private int maxDown;
-    private static byte upLimit = (byte)'9'; // 48
-    private static byte downLimit = (byte)'0'; // 57
 
 
     public TrafficHandler() {
@@ -28,11 +26,6 @@ public class TrafficHandler extends AbstractHandler<ByteBuffer> {
         this.totalUp = 0L;
         this.maxDown = 0;
         this.maxUp = 0;
-    }
-
-    @Override
-    public ByteBuffer handle() {
-        throw new UnsupportedOperationException("TrafficHandler doesn't support this method!");
     }
 
     @Override
@@ -57,6 +50,10 @@ public class TrafficHandler extends AbstractHandler<ByteBuffer> {
             return 0;
         }
         byte readEd = 0;
+        // 48
+        byte upLimit = (byte) '9';
+        // 57
+        byte downLimit = (byte) '0';
         while (byteBuffer.hasRemaining() && ((readEd = byteBuffer.get()) > upLimit || readEd < downLimit));
 
         StringBuilder number = new StringBuilder();

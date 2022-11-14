@@ -1,9 +1,9 @@
 package org.jessysnow.ccli;
 
-import org.jessysnow.ccli.component.net.nio.NIOHttpClient;
-import org.jessysnow.ccli.component.enums.HttpParamEntry;
-import org.jessysnow.ccli.component.enums.RequestContainer;
-import org.jessysnow.ccli.component.net.oio.SimpleHttpClient;
+import org.jessysnow.ccli.component.net.NIOHttpClient;
+import org.jessysnow.ccli.enums.HttpParamEntry;
+import org.jessysnow.ccli.enums.RequestContainer;
+import org.jessysnow.ccli.component.net.SimpleHttpClient;
 import org.jessysnow.ccli.view.Menu;
 
 import java.net.MalformedURLException;
@@ -34,13 +34,13 @@ public class Bootstrap {
             setHost(args[0]);
         }
 
-        // base url, it's an absolute URL
-        URL baseURL = new URL("http://" + host + ":" + port);
-
         // event loop
         Menu.show();
         String input;
         Scanner keyIn = new Scanner(System.in);
+        URL baseURL = new URL("http://" + host + ":" + port);
+        NIOHttpClient nioHttpClient = new NIOHttpClient(host, port);
+        SimpleHttpClient simpleHttpClient = new SimpleHttpClient();
         while (!(input = keyIn.nextLine()).trim().equalsIgnoreCase("Q")){
             int opChoose;
             try {
@@ -67,12 +67,11 @@ public class Bootstrap {
                 }
             }
 
-            // invoke RESTFul API(blocking)
             if(specificRequestContainer.isLongConnection()){
-                String res = SimpleHttpClient.doRequest(baseURL, specificRequestContainer);
-                System.out.println(res);
+                nioHttpClient.doRequest(specificRequestContainer, specificRequestContainer.getOutputStream());
             }else{
-                NIOHttpClient.doRequest(specificRequestContainer, specificRequestContainer.getOutputStream());
+                String res = simpleHttpClient.doRequest(baseURL, specificRequestContainer);
+                System.out.println(res);
             }
 
             Menu.show();
@@ -80,6 +79,6 @@ public class Bootstrap {
 
         // clean up
         keyIn.close();
-        NIOHttpClient.executor.close();
+        nioHttpClient.cleanUp();
     }
 }

@@ -1,5 +1,7 @@
 package org.jessysnow.ccli.component.io;
 
+import org.jessysnow.ccli.component.handler.TrafficHandler;
+
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,7 +24,7 @@ public class TrafficStream extends FilterOutputStream {
     }
 
     /**
-     * @see org.jessysnow.ccli.component.handler.impl.TrafficHandler;
+     * @see TrafficHandler ;
      * @param b   {@inheritDoc}
      */
     // ignore some traffic info

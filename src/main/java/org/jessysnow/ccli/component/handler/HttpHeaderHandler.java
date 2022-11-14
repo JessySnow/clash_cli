@@ -1,22 +1,17 @@
-package org.jessysnow.ccli.component.handler.impl;
+package org.jessysnow.ccli.component.handler;
 
-import org.jessysnow.ccli.component.handler.AbstractHandler;
+import org.jessysnow.ccli.component.handler.StatelessHandler;
 
 import java.nio.ByteBuffer;
 
 /**
  * Remove http header from http response
  */
-public class HttpHeaderHandler extends AbstractHandler<ByteBuffer> {
+public class HttpHeaderHandler extends StatelessHandler<ByteBuffer> {
 
     private static final byte NEWLINE = '\n';
     private static final byte ENTER = '\r';
     private boolean headerTag = true;
-
-    @Override
-    public ByteBuffer handle() {
-        throw new UnsupportedOperationException("HttpHeaderHandler doesn't support this method!");
-    }
 
     @Override
     public ByteBuffer handle(ByteBuffer byteBuffer) {

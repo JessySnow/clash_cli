@@ -1,4 +1,4 @@
-package org.jessysnow.ccli.component.enums;
+package org.jessysnow.ccli.enums;
 
 import org.jessysnow.ccli.Bootstrap;
 

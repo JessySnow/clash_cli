@@ -1,9 +1,8 @@
-package org.jessysnow.ccli.component.net.nio;
+package org.jessysnow.ccli.component.net;
 
 import org.jessysnow.ccli.Bootstrap;
-import org.jessysnow.ccli.component.handler.AbstractHandler;
-import org.jessysnow.ccli.component.handler.Handler;
-import org.jessysnow.ccli.component.enums.RequestContainer;
+import org.jessysnow.ccli.component.handler.StatelessHandler;
+import org.jessysnow.ccli.enums.RequestContainer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,27 +19,42 @@ import java.util.concurrent.*;
  * mainly used to invoke a stream-http-api
  */
 public class NIOHttpClient {
-    public static final ExecutorService executor = Executors.newFixedThreadPool(1);
-    private static Handler<ByteBuffer>[] cachedHandler = null;
+    public final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private StatelessHandler<ByteBuffer>[] cachedHandler;
+
+    private String host;
+    private int port;
+
+    public NIOHttpClient(){;}
+
+    public NIOHttpClient(String host, int port){
+        this.host = host;
+        this.port = port;
+    }
 
     // deal with http-stream api
-    public static Void doRequest(RequestContainer requestContainer ,OutputStream out){
-        Future<Void> stopDump = executor.submit(new consoleListener());
-        try(SocketChannel realTimeChannel = SocketChannel.open(new InetSocketAddress(Bootstrap.host, Bootstrap.port))){
+    public void doRequest(RequestContainer requestContainer , OutputStream out){
+        try(SocketChannel realTimeChannel = SocketChannel.open(new InetSocketAddress(this.host, this.port))){
+            Future<Void> stopDump = executor.submit(new consoleListener());
             realTimeChannel.configureBlocking(false);
-            while (!realTimeChannel.finishConnect());
+            while (!realTimeChannel.finishConnect()){continue;}
 
             // invoke
             realTimeChannel.write(ByteBuffer.wrap(requestContainer.getFixedHttpHeader().getBytes()));
-            // non-blocking read, loop until EOF
+            // non-blocking ,until EOF
             ByteBuffer readBuffer = ByteBuffer.allocate(512);
-            while(!stopDump.isDone() && realTimeChannel.read(readBuffer) != -1){
+            while(realTimeChannel.read(readBuffer) != -1){
+                if(!readBuffer.hasRemaining()){continue;}
+
                 readBuffer.flip();
                 ByteBuffer res = doHandle(readBuffer, requestContainer.getHandlers());
                 while (res.hasRemaining()){
                     out.write((char)res.get());
                 }
                 readBuffer.clear();
+                if(stopDump.isDone()){
+                    break;
+                }
             }
         } catch (IOException e) {
             System.out.printf("Unknown error while building socket channel, check your host: %s, and port: %d\n",
@@ -51,15 +65,15 @@ public class NIOHttpClient {
             // clean up
             cachedHandler = null;
         }
-        return null;
     }
 
-    private static ByteBuffer doHandle(ByteBuffer content, Class<? extends AbstractHandler>[] handlersClasses){
+    private ByteBuffer doHandle(ByteBuffer content, Class<? extends StatelessHandler>[] handlersClasses){
         if(null == handlersClasses || 0 == handlersClasses.length){
             return content;
         }
+        // build handler pip-line
         if(null == cachedHandler){
-            cachedHandler = new Handler[handlersClasses.length];
+            cachedHandler = new StatelessHandler[handlersClasses.length];
             for (int i = 0; i < cachedHandler.length; i++) {
                 try {
                     cachedHandler[i] = handlersClasses[i].getConstructor().newInstance();
@@ -68,22 +82,24 @@ public class NIOHttpClient {
             }
         }
 
-        for (Handler<ByteBuffer> byteBufferHandler : cachedHandler) {
+        for (StatelessHandler<ByteBuffer> byteBufferHandler : cachedHandler) {
             content = byteBufferHandler.handle(content);
         }
         return content;
     }
 
-    // listen on System.in
     private static class consoleListener implements Callable<Void> {
         @Override
         public Void call() throws Exception {
             // Don't close it, cause System.in would be used later
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            String line;
-            while (null == reader.readLine());
-            System.out.println("\n");
+            while (null == reader.readLine()){continue;}
             return null;
         }
+    }
+
+    public void cleanUp(){
+        this.cachedHandler = null;
+        this.executor.shutdownNow();
     }
 }

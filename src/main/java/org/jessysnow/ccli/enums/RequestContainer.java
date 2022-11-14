@@ -1,7 +1,6 @@
-package org.jessysnow.ccli.component.enums;
+package org.jessysnow.ccli.enums;
 
-import org.jessysnow.ccli.component.handler.AbstractHandler;
-import org.jessysnow.ccli.component.handler.impl.*;
+import org.jessysnow.ccli.component.handler.*;
 import org.jessysnow.ccli.component.io.TrafficStream;
 
 import java.io.OutputStream;
@@ -45,13 +44,13 @@ public enum RequestContainer {
     private final RestfulMethod method;
     private final Map<HttpParamEntry, String> requestParam;
     private final boolean longConnection;
-    private final Class<? extends AbstractHandler>[] handlers;
+    private final Class<? extends StatelessHandler>[] handlers;
     private final OutputStream outputStream;
     private final FixedHttpHeader fixedHttpHeader;
 
     RequestContainer(String requestURLPath,
                      RestfulMethod method, Map<HttpParamEntry, String> requestParam,
-                     boolean longConnection, Class<? extends AbstractHandler>[] handlers,
+                     boolean longConnection, Class<? extends StatelessHandler>[] handlers,
                      OutputStream outputStream,
                      FixedHttpHeader fixedHttpHeader){
         this.requestURLPath = requestURLPath;
@@ -88,7 +87,7 @@ public enum RequestContainer {
         return longConnection;
     }
 
-    public Class<? extends AbstractHandler>[] getHandlers() {
+    public Class<? extends StatelessHandler>[] getHandlers() {
         return handlers;
     }
 
