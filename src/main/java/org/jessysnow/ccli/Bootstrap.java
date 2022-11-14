@@ -3,7 +3,7 @@ package org.jessysnow.ccli;
 import org.jessysnow.ccli.component.net.nio.NIOHttpClient;
 import org.jessysnow.ccli.component.enums.HttpParamEntry;
 import org.jessysnow.ccli.component.enums.RequestContainer;
-import org.jessysnow.ccli.component.net.SimpleHttpClient;
+import org.jessysnow.ccli.component.net.oio.SimpleHttpClient;
 import org.jessysnow.ccli.view.Menu;
 
 import java.net.MalformedURLException;
@@ -68,9 +68,11 @@ public class Bootstrap {
             }
 
             // invoke RESTFul API(blocking)
-            Object res = SimpleHttpClient.request(baseURL, specificRequestContainer);
-            if(res != null && res.getClass().equals(String.class)){
+            if(specificRequestContainer.isLongConnection()){
+                String res = SimpleHttpClient.doRequest(baseURL, specificRequestContainer);
                 System.out.println(res);
+            }else{
+                NIOHttpClient.doRequest(specificRequestContainer, specificRequestContainer.getOutputStream());
             }
 
             Menu.show();

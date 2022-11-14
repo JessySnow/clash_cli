@@ -1,4 +1,4 @@
-package org.jessysnow.ccli.component.net;
+package org.jessysnow.ccli.component.net.oio;
 
 import org.jessysnow.ccli.component.handler.AbstractHandler;
 import org.jessysnow.ccli.component.net.nio.NIOHttpClient;
@@ -16,13 +16,6 @@ import java.nio.charset.StandardCharsets;
  * A simple single thread http client
  */
 public class SimpleHttpClient {
-    public static Object request(URL baseURL, RequestContainer requestContainer){
-        if(requestContainer.isLongConnection()){
-            return NIOHttpClient.doRequest(requestContainer, requestContainer.getOutputStream());
-        }
-        return SimpleHttpClient.doRequest(baseURL, requestContainer);
-    }
-
     // Restful invoke
     public static String doRequest(URL baseURL, RequestContainer requestContainer){
         URL requestURL;
