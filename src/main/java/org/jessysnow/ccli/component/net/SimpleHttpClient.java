@@ -26,6 +26,7 @@ public class SimpleHttpClient {
             requestURL = new URL(baseURL, URLHelper.parseURL(requestContainer));
             connection = (HttpURLConnection) requestURL.openConnection();
             connection.setRequestMethod(requestContainer.getMethod());
+
             // open socket io and do block request
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             String line;

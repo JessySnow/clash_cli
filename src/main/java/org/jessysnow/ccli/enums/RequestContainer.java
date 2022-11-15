@@ -35,9 +35,10 @@ public enum RequestContainer {
             RestfulMethod.GET,
             constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY, HttpParamEntry.TEST_URL, HttpParamEntry.TIMEOUT}),
             false, new Class[]{ProxyDelayHandler.class}, null, null),
+    // Path param: selector group name, body param: specific proxy name
     SELECT_SPECIFIC_PROXY("/proxies/:name",
             RestfulMethod.PUT,
-            constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.PROXY}),
+            constructRequestParamMap(new HttpParamEntry[]{HttpParamEntry.SELECTOR_NAME, HttpParamEntry.PROXY}),
             false,  null, null, null);
 
     private final String requestURLPath;
