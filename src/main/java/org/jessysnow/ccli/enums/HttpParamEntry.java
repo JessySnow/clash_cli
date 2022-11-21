@@ -9,7 +9,7 @@ public enum HttpParamEntry {
 
     SELECTOR_NAME("#name","selector group name"),
     PROXY(":name","proxy name"),
-    TIMEOUT(":timeout", "timeout(eg: 2000ms)"),
+    TIMEOUT(":timeout", "timeout(eg: 2000)"),
     TEST_URL(":url", "test url(eg: https://www.google.com)");
 
     private final String paramPlaceholder;
