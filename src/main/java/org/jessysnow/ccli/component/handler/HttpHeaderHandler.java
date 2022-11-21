@@ -1,7 +1,5 @@
 package org.jessysnow.ccli.component.handler;
 
-import org.jessysnow.ccli.component.handler.StatelessHandler;
-
 import java.nio.ByteBuffer;
 
 /**
