@@ -8,7 +8,7 @@
 - Dump real-time log to console ☑️
 - Get information of all proxies ☑️
 - Get information of specific proxy ☑️
-- Select specific proxy
+- Select specific proxy [In Progress]
 - Show all proxies info ☑️
 
 ***Options 0 and 1 are HTTP streaming API, press enter to exit***
